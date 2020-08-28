@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+ <html>
+<head>
+<meta charset="utf-8">
+<script src="vue.js" type="text/javascript" charset="UTF-8"></script>
+<title></title>
+
+
+</head>
+<body>
+	<div id="app">
+		<input v-model="num">
+		<button v-on:click="run">計算</button>
+		{{time}}
+	</div>
+</body>
+<script type="text/javascript">
+	var vm = new Vue({
+		el:'#app',
+		data:{
+			num:null,
+			time:'',
+			},
+		methods:{
+			run(){
+				console.log(this.num)
+				start = new Date().getTime();
+				for(var i=2 ; i<=parseInt(this.num); i++){	
+					if (i%2!=0 ){
+						var flag = true;
+						for(var j=2 ; j<Math.sqrt(i) ; j++){						
+							if(i%j == 0){
+								flag = false;						     
+							}
+						}							
+						if(flag){
+							console.log(i);
+						}					
+					}
+				}
+				end = new Date().getTime();
+				this.time = (end - start) / 1000 + "sec"
+				console.log((end - start) / 1000 + "sec");
+			}
+		}
+	})
+	
+	
+</script>
+ </html>
