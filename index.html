@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<script src="vue.js" type="text/javascript" charset="UTF-8"></script>
+		<title></title>
+	</head>
+	<body>
+		<div id='app'>
+			<h1>新增單筆：</h1>
+			<span>產品名稱：</span><input v-model="name" ></input>單價：<input v-model="price"  >
+			</input>數量：<input v-model="amount" ></input> <button v-on:click="add">新增</button> {{strError}}
+			<p>購物清單：</p>
+			
+			
+			<table width="600">
+				<tr v-for="item in list">
+					<td>產品名稱</td>
+					<td>{{item[1]}}</td>
+					<td>單價</td>
+					<td>{{item[2]}}</td>
+					<td>數量</td>
+					<td>{{item[3]}}</td>
+					<td><dela :val="item[0]" v-on:value="del_list"></dela></td>
+				</tr>
+			</table>
+			
+			<p>總價：{{total}}</p>
+		</div>
+	</body>
+	<script>
+		Vue.component('dela', {
+			props:['val'],
+			methods:{
+				childClick:function(){
+					this.$emit('value',this.val);
+				}
+			},
+			
+		  
+			template: '<button @click="childClick">刪除</button>'
+		})
+		var vm = new Vue({
+			el:'#app',
+			data:{list:[],
+				name:null,
+				nameError:false,
+				price:null,
+				priceError:false,
+				amount:null,
+				amountError:false,
+				total:0,
+				strError:'',
+				index:0
+			},
+			watch:{
+				name:function(){
+					if(this.name == null || this.name == ""){
+						this.nameError = true;
+					}else{
+						this.nameError = false;
+					}
+				},
+				price:function(){
+					if(isNaN(this.price) || (this.price == null)){
+						this.priceError = true;
+					}else{
+						this.priceError = false;
+					}
+				},
+				amount:function(){
+					if(isNaN(this.amount) || (this.amount == null)){
+						this.amountError = true;
+					}else{
+						this.amountError = false;
+					}
+				},
+			},
+			methods:{
+				add:function(){
+					_list = [];
+					console.log(typeof(this.price));
+					if (this.priceError == false && this.amountError == false && this.nameError == false){	
+						_list.push(this.list.length,this.name,this.price,this.amount);
+						this.list.push(_list);
+						//console.log(_list);
+						//console.log(this.list);
+						
+						this.total = 0;	
+						for(var i=0;i<this.list.length;i++){
+							this.total += parseInt(this.list[i][2]*this.list[i][3]);
+						}
+						
+					}else{
+						this.strError = '新增不成功';
+					}
+				},
+				del_list:function(e){
+					this.list.splice(e,1);
+					temp = this.list;
+					this.list = [];
+					this.total = 0;	
+					for(var i=0;i<temp.length;i++){
+						this.list.push([i,temp[i][1],temp[i][2],temp[i][3]]);
+					}
+					for(var i=0;i<this.list.length;i++){
+						this.total += parseInt(this.list[i][2]*this.list[i][3]);
+					}
+				}
+				
+			}
+			
+			
+		})
+		
+	</script>
+	<style type="text/css">
+		input{border: 1px solid #ccc; padding: 7px 14px; }
+		button{border:0;
+		  background-color:#003C9D;
+		  color:#fff;
+		  font-size: 18px;
+		  border-radius:10px;
+		  width: 70px;
+		  height: 30px;
+		  cursor:pointer;}
+	</style>
+</html>
